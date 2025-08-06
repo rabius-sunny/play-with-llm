@@ -1,0 +1,17 @@
+{
+  "name": "llm",
+  "scripts": {
+    "dev": "bun run --hot src/index.ts"
+  },
+  "dependencies": {
+    "@dqbd/tiktoken": "^1.0.21",
+    "@modelcontextprotocol/sdk": "^1.17.1",
+    "gpt-3-encoder": "^1.1.4",
+    "hono": "^4.8.10",
+    "openai": "^5.10.2",
+    "zod": "^4.0.15"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

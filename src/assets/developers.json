@@ -1,0 +1,22 @@
+{
+  "developers": [
+    {
+      "name": "Roman",
+      "designation": "Frontend Developer",
+      "skills": ["JavaScript", "React", "Tailwind css", "Ant Design"],
+      "bio": "Roman is a passionate frontend developer with a knack for creating beautiful and responsive user interfaces. He loves working with React and enjoys the challenge of making web applications both functional and visually appealing."
+    },
+    {
+      "name": "Sunny",
+      "designation": "Backend Developer",
+      "skills": ["Node.js", "Express", "MongoDB", "PostgreSQL", "DevOps"],
+      "bio": "Sunny is a skilled backend developer with a strong understanding of server-side technologies. He enjoys building robust APIs and has a passion for working with databases."
+    },
+    {
+      "name": "Ashraful",
+      "designation": "Wordpress Developer",
+      "skills": ["PHP", "WordPress", "MySQL"],
+      "bio": "Ashraful is a talented WordPress developer with a deep understanding of PHP and MySQL. He enjoys creating custom themes and plugins to enhance the functionality of WordPress sites."
+    }
+  ]
+}

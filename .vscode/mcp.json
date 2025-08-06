@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "developerInfoMCP": {
+      "command": "node ../mcp.js",
+      "env": {}
+    }
+  }
+}

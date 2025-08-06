@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Chatbot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gray-100 min-h-screen flex flex-col items-center justify-center"
+  >
+    <h1 class="text-4xl text-center my-5 font-bold">Chat bot</h1>
+    <div
+      class="w-full max-w-md bg-white rounded shadow-lg p-4 flex flex-col h-[80vh]"
+    >
+      <div
+        id="chat"
+        class="flex-1 overflow-y-auto mb-4 space-y-2"
+      ></div>
+      <form
+        id="chat-form"
+        class="flex gap-2"
+      >
+        <input
+          id="user-input"
+          type="text"
+          class="flex-1 border rounded px-3 py-2"
+          placeholder="Type your message..."
+          required
+        />
+        <button
+          type="submit"
+          class="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+    <script>
+      const chat = document.getElementById('chat');
+      const form = document.getElementById('chat-form');
+      const input = document.getElementById('user-input');
+
+      function addMessage(text, from) {
+        const msg = document.createElement('div');
+        msg.className = from === 'user' ? 'text-right' : 'text-left';
+        msg.innerHTML = `<span class="inline-block px-3 py-2 rounded ${
+          from === 'user'
+            ? 'bg-blue-100 text-blue-800'
+            : 'bg-gray-200 text-gray-800'
+        }">${text}</span>`;
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        if (!text) return;
+        addMessage(text, 'user');
+        input.value = '';
+        addMessage('...', 'bot');
+        const res = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        chat.lastChild.remove();
+        if (res.ok) {
+          const data = await res.json();
+          addMessage(data.reply, 'bot');
+        } else {
+          addMessage('Error contacting bot.', 'bot');
+        }
+      };
+    </script>
+  </body>
+</html>
