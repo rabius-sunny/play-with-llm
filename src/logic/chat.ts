@@ -1,27 +1,57 @@
 import { Context } from 'hono';
-import OpenAI from 'openai';
+import { ChatService } from '../services/chat';
+
+const chatService = new ChatService();
 
 export async function useOpenAIChat(c: Context) {
-  const { message } = await c.req.json();
-  if (!message) {
-    return c.json({ error: 'No message provided.' }, 400);
-  }
-  const apiKey = Bun.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return c.json({ error: 'OpenAI API key not set.' }, 500);
-  }
-  const openai = new OpenAI({ apiKey });
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
-        { role: 'user', content: message }
-      ]
+    const { message, userId } = await c.req.json();
+
+    if (!message) {
+      return c.json({ error: 'No message provided.' }, 400);
+    }
+
+    const apiKey = Bun.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return c.json({ error: 'OpenAI API key not set.' }, 500);
+    }
+
+    // Process the query through our 4-stage pipeline
+    const result = await chatService.processQuery(message, userId);
+
+    return c.json({
+      reply: result.response,
+      metadata: {
+        parsedQuery: result.parsedQuery,
+        productCount: result.productCount,
+        cached: result.cached
+      }
     });
-    const reply = completion.choices?.[0]?.message?.content || 'No reply.';
-    return c.json({ reply });
-  } catch (e) {
-    return c.json({ reply: 'OpenAI API error.' }, 500);
+  } catch (error) {
+    console.error('Chat error:', error);
+    return c.json(
+      {
+        reply: 'I apologize, but I encountered an error. Please try again.',
+        error: 'Internal server error'
+      },
+      500
+    );
+  }
+}
+
+export async function getChatHistory(c: Context) {
+  try {
+    const userId = c.req.query('userId');
+    const limit = parseInt(c.req.query('limit') || '10');
+
+    if (!userId) {
+      return c.json({ error: 'User ID required' }, 400);
+    }
+
+    const history = await chatService.getConversationHistory(userId, limit);
+    return c.json({ history });
+  } catch (error) {
+    console.error('Get chat history error:', error);
+    return c.json({ error: 'Failed to get chat history' }, 500);
   }
 }

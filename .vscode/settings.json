@@ -3,5 +3,6 @@
     "llm/.vscode/mcp.json: developerInfoMCP": {
       "allowedModels": ["github.copilot-chat/gpt-4.1"]
     }
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
