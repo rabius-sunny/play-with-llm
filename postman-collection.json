@@ -1,0 +1,528 @@
+{
+  "info": {
+    "name": "E-commerce AI Chatbot API",
+    "description": "Complete API collection for the E-commerce AI Chatbot with RAG functionality",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "user123",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the API server is running and healthy"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"status\": \"ok\",\n    \"timestamp\": \"2025-08-07T10:00:00.000Z\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Chat - Send Message",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Show me red running shoes under $100\",\n  \"userId\": \"{{userId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        },
+        "description": "Send a message to the AI chatbot for product recommendations and queries"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Show me red running shoes under $100\",\n  \"userId\": \"user123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"reply\": \"Here are some great red running shoes under $100...\",\n    \"metadata\": {\n        \"parsedQuery\": {\n            \"intent\": \"search\",\n            \"category\": \"shoes\",\n            \"filters\": {\n                \"color\": \"red\",\n                \"maxPrice\": 100\n            }\n        },\n        \"productCount\": 5,\n        \"cached\": false\n    }\n}"
+        }
+      ]
+    },
+    {
+      "name": "Chat - Product Comparison",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Compare iPhone 15 vs Samsung Galaxy S24\",\n  \"userId\": \"{{userId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        },
+        "description": "Compare multiple products using the AI chatbot"
+      }
+    },
+    {
+      "name": "Chat - Multilingual Query",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"আমার জন্য একটি ভালো laptop suggest করো যার দাম ৫০০ ডলারের মধ্যে\",\n  \"userId\": \"{{userId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        },
+        "description": "Test multilingual support (Bengali example)"
+      }
+    },
+    {
+      "name": "Chat - Missing Message Error",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"{{userId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        },
+        "description": "Test error handling when message is missing"
+      },
+      "response": [
+        {
+          "name": "Error Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"error\": \"No message provided.\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Chat History - Get Conversation",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/chat/history?userId={{userId}}&limit=10",
+          "host": ["{{base_url}}"],
+          "path": ["chat", "history"],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userId}}",
+              "description": "User ID to get chat history for"
+            },
+            {
+              "key": "limit",
+              "value": "10",
+              "description": "Number of messages to retrieve (default: 10)"
+            }
+          ]
+        },
+        "description": "Get chat history for a specific user"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/history?userId=user123&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "history"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "user123"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"history\": [\n        {\n            \"id\": \"1\",\n            \"user_id\": \"user123\",\n            \"message\": \"Show me red running shoes\",\n            \"response\": \"Here are some great red running shoes...\",\n            \"timestamp\": \"2025-08-07T10:00:00.000Z\"\n        }\n    ]\n}"
+        }
+      ]
+    },
+    {
+      "name": "Chat History - Large Limit",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/chat/history?userId={{userId}}&limit=50",
+          "host": ["{{base_url}}"],
+          "path": ["chat", "history"],
+          "query": [
+            {
+              "key": "userId",
+              "value": "{{userId}}"
+            },
+            {
+              "key": "limit",
+              "value": "50"
+            }
+          ]
+        },
+        "description": "Get larger chat history (50 messages)"
+      }
+    },
+    {
+      "name": "Chat History - Missing User ID Error",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/chat/history?limit=10",
+          "host": ["{{base_url}}"],
+          "path": ["chat", "history"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "10"
+            }
+          ]
+        },
+        "description": "Test error handling when userId is missing"
+      },
+      "response": [
+        {
+          "name": "Error Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/history?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"error\": \"User ID required\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Token Count - Calculate Tokens",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Show me the best gaming laptops under $1500 with good graphics cards\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/token-count",
+          "host": ["{{base_url}}"],
+          "path": ["token-count"]
+        },
+        "description": "Calculate token count for given text using GPT tokenizers"
+      },
+      "response": [
+        {
+          "name": "Success Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Show me the best gaming laptops under $1500\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/token-count",
+              "host": ["{{base_url}}"],
+              "path": ["token-count"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"shortCount\": 12,\n    \"longCount\": 12\n}"
+        }
+      ]
+    },
+    {
+      "name": "Token Count - Long Text",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"text\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/token-count",
+          "host": ["{{base_url}}"],
+          "path": ["token-count"]
+        },
+        "description": "Test token counting with longer text"
+      }
+    },
+    {
+      "name": "Token Count - Missing Text Error",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/token-count",
+          "host": ["{{base_url}}"],
+          "path": ["token-count"]
+        },
+        "description": "Test error handling when text is missing"
+      },
+      "response": [
+        {
+          "name": "Error Response",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/token-count",
+              "host": ["{{base_url}}"],
+              "path": ["token-count"]
+            }
+          },
+          "status": "Bad Request",
+          "code": 400,
+          "_postman_previewlanguage": "json",
+          "header": [],
+          "cookie": [],
+          "body": "{\n    \"error\": \"No text provided.\"\n}"
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "noauth"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// You can add pre-request scripts here",
+          "// For example, to set dynamic variables or authentication"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// You can add test scripts here",
+          "// For example, to validate response status and data"
+        ]
+      }
+    }
+  ]
+}
