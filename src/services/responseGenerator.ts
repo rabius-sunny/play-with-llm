@@ -19,15 +19,12 @@ export class ResponseGeneratorService {
     const systemPrompt = `You are a helpful e-commerce assistant. Present search results naturally and helpfully.
 
 Guidelines:
-- Respond in the same language mix as the user's original query
-- Highlight products that best match their needs
-- For comparisons, create clear comparison tables or lists
-- For recommendations, explain why you're suggesting specific products
-- Don't ask follow up questions, just provide the information
-- Don't mention anything like 'If you have further questions or need more options, let me know!' there won't be any further questions.
+- Respond in the same language mix as the user's original query.
+- Don't ask follow up questions, just provide the information.
+- Don't make any conclusions, don't include any trailing message after product info.
 - If the user asks about anything unrelated to product, you should politely tell them that you can only help with product info.
-- Include prices in the format mentioned by user or default currency
-- Keep responses concise but informative
+- Include prices in the format mentioned by user or default currency.
+- Keep responses short within 100 words.
 
 User's Intent: ${parsedQuery.intent}
 User's Language: ${parsedQuery.language || 'mixed'}`;
@@ -79,12 +76,6 @@ Please provide a helpful response that addresses the user's query using these se
       );
     }
 
-    if (parsedQuery.product_category) {
-      suggestions.push(
-        `Look in related categories beyond ${parsedQuery.product_category}`
-      );
-    }
-
     if (suggestions.length === 0) {
       suggestions.push(
         'Try using different search terms or browse our categories'
@@ -105,14 +96,8 @@ ${suggestions.map((s) => `• ${s}`).join('\n')}`;
     return `I found ${searchResults.length} products for you:
 
 ${searchResults
-  .map(
-    (product, index) =>
-      `${index + 1}. ${product.name} - $${product.price}
-   ${product.specifications.substring(0, 100)}...`
-  )
-  .join('\n\n')}
-
-Would you like more details about any of these products?`;
+  .map((product, index) => `${index + 1}. ${product.name} - $${product.price}.`)
+  .join('\n\n')}`;
   }
 
   async generateComparisonResponse(products: Product[]): Promise<string> {
@@ -120,7 +105,7 @@ Would you like more details about any of these products?`;
       return 'I need at least 2 products to make a comparison.';
     }
 
-    const systemPrompt = `You are an expert product comparison assistant. Create a clear, detailed comparison between the given products. Focus on key differences in specifications, features, and value proposition.`;
+    const systemPrompt = `You are an expert product comparison assistant. Create a clear but short comparison between the given products. Focus on key differences in features and response within 100 words.`;
 
     const userPrompt = `Compare these products:
 
@@ -132,7 +117,7 @@ ${products
   )
   .join('\n\n')}
 
-Provide a detailed comparison highlighting key differences, strengths, and recommendations.`;
+Provide a short comparison highlighting key differences in features.`;
 
     try {
       const completion = await openai.chat.completions.create({
@@ -156,7 +141,7 @@ Provide a detailed comparison highlighting key differences, strengths, and recom
   }
 
   private fallbackComparison(products: Product[]): string {
-    return `Comparison of ${products.length} products:
+    return `
 
 ${products
   .map(
@@ -164,8 +149,6 @@ ${products
       `**${product.name}** - $${product.price}
    Key specs: ${product.specifications.substring(0, 150)}...`
   )
-  .join('\n\n')}
-
-Each product has its unique strengths. Would you like me to elaborate on any specific aspect?`;
+  .join('\n\n')}`;
   }
 }

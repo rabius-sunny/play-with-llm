@@ -3,6 +3,7 @@ import { cors } from 'hono/cors';
 import { serveStatic } from 'hono/bun';
 import { useOpenAIChat, getChatHistory } from './logic/chat';
 import { getTokenCount } from './logic/token';
+import { clearCache } from './logic/cache';
 
 const app = new Hono();
 
@@ -15,6 +16,7 @@ app.use('/static/*', serveStatic({ root: './src' }));
 
 // API routes
 app.post('/chat', useOpenAIChat);
+app.get('/clear-cache', clearCache);
 app.get('/chat/history', getChatHistory);
 app.post('/token-count', getTokenCount);
 

@@ -31,7 +31,7 @@ Extract and return ONLY a valid JSON object with these fields:
 - product_category: (electronics, smartphones, laptops, headphones, tablets, etc.)
 - price_range: {min: number, max: number} (extract currency amounts, convert if needed)
 - key_features: [list of important features mentioned]
-- search_terms: [relevant keywords for database search]
+- search_terms: [relevant keywords for database search in english and singular form]
 - intent: (search, compare, recommend, question)
 - currency: (if mentioned: dollars, rupees, euros, etc.)
 - language: (detected language: english, hindi, spanish, etc.)

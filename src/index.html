@@ -17,6 +17,29 @@
         line-height: 1.6;
       }
 
+      /* Custom scrollbars: thin and themed (#cb9e74) */
+      /* Firefox */
+      * {
+        scrollbar-width: thin; /* auto | thin | none */
+        scrollbar-color: #cb9e74 transparent; /* thumb | track */
+      }
+
+      /* WebKit (Chrome, Edge, Safari) */
+      *::-webkit-scrollbar {
+        width: 8px; /* vertical */
+        height: 8px; /* horizontal */
+      }
+
+      *::-webkit-scrollbar-thumb {
+        background-color: #cb9e74;
+        border-radius: 9999px;
+        background-clip: padding-box;
+      }
+
+      *::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
       .markdown-content h1,
       .markdown-content h2,
       .markdown-content h3,
@@ -131,13 +154,56 @@
       .markdown-content a:hover {
         color: #1d4ed8;
       }
+
+      /* Typing indicator animation */
+      #typing-indicator {
+        /* reserve minimal height to avoid layout shift */
+        min-height: 1.5rem;
+      }
+      #typing-indicator .typing-dots {
+        display: inline-flex;
+        gap: 0.3rem;
+        align-items: center;
+      }
+      #typing-indicator .typing-dots .dot {
+        width: 6px;
+        height: 6px;
+        background: #cb9e74;
+        border-radius: 9999px;
+        opacity: 0.45;
+        animation: typing-bounce 1s infinite ease-in-out;
+      }
+      #typing-indicator .typing-dots .dot:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+      #typing-indicator .typing-dots .dot:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+      @keyframes typing-bounce {
+        0%,
+        80%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.45;
+        }
+        40% {
+          transform: translateY(-6px);
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #typing-indicator .typing-dots .dot {
+          animation: none;
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body
     class="bg-gray-100 min-h-screen flex flex-col items-center justify-center"
   >
     <h1 class="text-4xl text-center my-5 font-bold text-blue-600">
-      E-commerce AI Assistant
+      Dazzle AI Assistant
     </h1>
     <p class="text-center text-gray-600 mb-4">
       Ask me about products in any language! Try: "gaming laptop under $1000" or
@@ -156,7 +222,15 @@
         id="typing-indicator"
         class="hidden text-gray-500 italic mb-2"
       >
-        AI is thinking...
+        <span class="mr-2">AI is thinking</span>
+        <span
+          class="typing-dots"
+          aria-hidden="true"
+        >
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </span>
       </div>
 
       <form
@@ -166,14 +240,14 @@
         <input
           id="user-input"
           type="text"
-          class="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Ask about products... (e.g., 'gaming laptop under $1000')"
+          class="flex-1 border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#cb9e74]"
+          placeholder="Ask about products... (e.g., 'gaming laptop under 100000 taka')"
           required
         />
         <button
           type="submit"
           id="send-btn"
-          class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors"
+          class="bg-[#cb9e74] hover:opacity-80 font-medium text-white px-6 py-3 rounded-lg transition-colors"
         >
           Send
         </button>
@@ -183,8 +257,14 @@
     <!-- Debug info -->
     <div
       id="debug-info"
-      class="mt-4 p-3 bg-gray-50 rounded text-xs text-gray-600 max-w-2xl w-full"
+      class="mt-4 p-3 hidden bg-gray-50 rounded text-xs text-gray-600 max-w-2xl w-full"
     ></div>
+    <button
+      id="clear-cache-btn"
+      class="mt-4 p-2 text-white rounded"
+    >
+      Clear Cache
+    </button>
 
     <script>
       const chat = document.getElementById('chat');
@@ -193,6 +273,11 @@
       const sendBtn = document.getElementById('send-btn');
       const typingIndicator = document.getElementById('typing-indicator');
       const debugInfo = document.getElementById('debug-info');
+      const clearCacheBtn = document.getElementById('clear-cache-btn');
+
+      clearCacheBtn.onclick = async () => {
+        const response = await fetch('/clear-cache', { method: 'GET' });
+      };
 
       // Configure marked for better rendering
       marked.setOptions({
@@ -227,7 +312,7 @@
             from === 'user' ? 'max-w-[80%]' : 'w-full'
           } px-4 py-3 rounded-lg ${
           from === 'user'
-            ? 'bg-blue-500 text-white'
+            ? 'bg-[#cb9e74] text-white'
             : 'bg-gray-200 text-gray-800'
         }">
             <div class="${
